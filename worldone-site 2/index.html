@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World One Enterprise — Pioneering the Future of Technology and Innovation</title>
+  <meta name="description" content="World One Enterprise delivers cutting-edge solutions across five critical sectors: AI Data Centre, Surveillance, Tactical Defence, Hypercube, and Green Energy." />
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root { color-scheme: dark; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #0a1628;
+      color: #f8fafc;
+    }
+
+    /* ---- Glass effect ---- */
+    .glass-effect {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    /* ---- Animations ---- */
+    @keyframes kenburns {
+      0%   { transform: scale(1) translate(0, 0); }
+      100% { transform: scale(1.12) translate(-1%, -1%); }
+    }
+    .animate-kenburns { animation: kenburns 7s ease-out forwards; }
+
+    @keyframes cursor-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .animate-cursor-blink { animation: cursor-blink 1s step-end infinite; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; }
+
+    @keyframes pulseSlow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .animate-pulse-slow { animation: pulseSlow 3s ease-in-out infinite; }
+
+    .section-fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .section-fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ---- Scrollbar ---- */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #0a1628; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    .line-clamp-2 {
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    /* Toast */
+    #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 100; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      background: rgba(15,23,42,0.95); border: 1px solid rgba(148,163,184,0.2);
+      backdrop-filter: blur(12px); border-radius: 12px; padding: 14px 18px;
+      min-width: 280px; max-width: 360px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      transform: translateX(120%); transition: transform 0.35s ease; color: #f8fafc;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast.destructive { border-color: rgba(248,113,113,0.5); }
+    .toast-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 2px; }
+    .toast-desc { font-size: 0.85rem; color: #94a3b8; }
+  </style>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="min-h-screen bg-[#0a1628]">
+
+  <!-- ============ HEADER ============ -->
+  <header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo -->
+        <div class="flex-shrink-0">
+          <button onclick="goHome()" class="flex items-center space-x-3 group cursor-pointer bg-transparent border-none" aria-label="Go to home page">
+            <img src="https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/qzcsszw7_no%20bg%20logo%20wo.png"
+                 alt="World One Enterprise Logo"
+                 class="w-12 h-12 object-contain transition-transform duration-300 group-hover:scale-105" />
+            <span class="text-xl font-bold text-white hidden sm:block group-hover:text-cyan-300 transition-colors duration-200">
+              World One Enterprise
+            </span>
+          </button>
+        </div>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center space-x-8" id="desktop-nav">
+          <button onclick="goToSection('home')"      class="nav-link text-slate-300 hover:text-cyan-400 transition-colors duration-200 text-sm font-medium bg-transparent border-none cursor-pointer">Home</button>
+          <button onclick="goToSection('about')"     class="nav-link text-slate-300 hover:text-cyan-400 transition-colors duration-200 text-sm font-medium bg-transparent border-none cursor-pointer">About</button>
+          <button onclick="goToSection('sectors')"   class="nav-link text-slate-300 hover:text-cyan-400 transition-colors duration-200 text-sm font-medium bg-transparent border-none cursor-pointer">Sectors</button>
+          <button onclick="goToSection('brochures')" class="nav-link text-slate-300 hover:text-cyan-400 transition-colors duration-200 text-sm font-medium bg-transparent border-none cursor-pointer">Brochures</button>
+          <button onclick="goToSection('contact')"   class="nav-link text-slate-300 hover:text-cyan-400 transition-colors duration-200 text-sm font-medium bg-transparent border-none cursor-pointer">Contact</button>
+        </nav>
+
+        <!-- CTA -->
+        <div class="hidden md:block">
+          <button onclick="goToSection('contact')" class="inline-flex items-center justify-center rounded-md bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 text-sm font-medium transition-colors duration-200">
+            Get in Touch
+          </button>
+        </div>
+
+        <!-- Mobile menu button -->
+        <button class="md:hidden text-white p-2 bg-transparent border-none" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+          <i data-lucide="menu" id="menu-icon" width="24" height="24"></i>
+          <i data-lucide="x" id="close-icon" width="24" height="24" style="display:none"></i>
+        </button>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="md:hidden py-4 space-y-4 border-t border-slate-700/50 mt-2" style="display:none">
+        <button onclick="goToSection('home')"      class="block w-full text-left text-slate-300 hover:text-cyan-400 py-2 bg-transparent border-none cursor-pointer">Home</button>
+        <button onclick="goToSection('about')"     class="block w-full text-left text-slate-300 hover:text-cyan-400 py-2 bg-transparent border-none cursor-pointer">About</button>
+        <button onclick="goToSection('sectors')"   class="block w-full text-left text-slate-300 hover:text-cyan-400 py-2 bg-transparent border-none cursor-pointer">Sectors</button>
+        <button onclick="goToSection('brochures')" class="block w-full text-left text-slate-300 hover:text-cyan-400 py-2 bg-transparent border-none cursor-pointer">Brochures</button>
+        <button onclick="goToSection('contact')"   class="block w-full text-left text-slate-300 hover:text-cyan-400 py-2 bg-transparent border-none cursor-pointer">Contact</button>
+        <button onclick="goToSection('contact')" class="w-full inline-flex items-center justify-center rounded-md bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 text-sm font-medium">Get in Touch</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HOMEPAGE VIEW ============ -->
+  <div id="home-view">
+    <main>
+      <!-- ===== HERO ===== -->
+      <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div id="hero-slides"></div>
+
+        <!-- Overlays -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#0a1628]/40 via-[#0a1628]/20 to-[#0a1628]/80 z-[2]"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0a1628]/30 via-transparent to-[#0a1628]/30 z-[2]"></div>
+
+        <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center pt-32 sm:pt-40">
+          <div class="animate-fadeInUp">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 leading-tight"
+                style="text-shadow: 0 4px 24px rgba(0,0,0,0.85), 0 2px 8px rgba(0,0,0,0.95);">
+              World One
+              <span class="text-amber-300 inline-block"
+                    style="text-shadow: 0 0 28px rgba(252,211,77,0.65), 0 4px 24px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.95);">
+                <span id="typed-text"></span><span class="inline-block w-[3px] h-[0.9em] bg-amber-300 align-middle ml-1 animate-cursor-blink"></span>
+              </span>
+            </h1>
+            <p class="text-lg sm:text-xl text-white mb-6 max-w-3xl mx-auto leading-relaxed font-medium"
+               style="text-shadow: 0 2px 12px rgba(0,0,0,0.9);">
+              Pioneering the Future of Technology and Innovation
+            </p>
+            <p class="text-base text-slate-100 mb-10 max-w-2xl mx-auto"
+               style="text-shadow: 0 2px 8px rgba(0,0,0,0.9);">
+              Delivering cutting-edge solutions across five critical sectors that shape the future of infrastructure, security, and sustainability
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <button onclick="goToSection('sectors')"
+                class="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-4 text-lg rounded-md transition-all duration-300 shadow-lg shadow-cyan-600/50 hover:shadow-cyan-600/70">
+                Explore Our Sectors
+              </button>
+              <button onclick="goToSection('contact')"
+                class="border border-cyan-300 text-white hover:bg-cyan-600/30 bg-[#0a1628]/50 backdrop-blur-md px-8 py-4 text-lg rounded-md transition-all duration-300">
+                Contact Us
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide indicators -->
+        <div id="hero-indicators" class="absolute bottom-24 left-1/2 -translate-x-1/2 flex space-x-3 z-10"></div>
+
+        <!-- Scroll down -->
+        <button onclick="goToSection('about')" aria-label="Scroll down"
+          class="absolute bottom-8 left-1/2 -translate-x-1/2 text-cyan-400 animate-pulse-slow cursor-pointer hover:text-cyan-300 transition-colors duration-300 z-10 bg-transparent border-none">
+          <i data-lucide="chevron-down" width="40" height="40"></i>
+        </button>
+      </section>
+
+      <!-- ===== ABOUT ===== -->
+      <section id="about" class="py-24 bg-gradient-to-b from-[#1e293b] to-[#0f172a]">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-4xl mx-auto text-center mb-20 section-fade-in">
+            <h2 class="text-4xl sm:text-5xl font-bold text-white mb-6">Transforming Industries Through Innovation</h2>
+            <p class="text-lg text-slate-300 mb-8 leading-relaxed" id="company-description"></p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-20 max-w-5xl mx-auto">
+            <div class="glass-effect rounded-2xl p-8 hover:border-cyan-500/30 transition-all duration-300 section-fade-in">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center mr-4">
+                  <i data-lucide="target" class="text-cyan-400" width="24" height="24"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white">Our Vision</h3>
+              </div>
+              <p class="text-slate-300 leading-relaxed" id="company-vision"></p>
+            </div>
+            <div class="glass-effect rounded-2xl p-8 hover:border-cyan-500/30 transition-all duration-300 section-fade-in">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-teal-600/20 rounded-lg flex items-center justify-center mr-4">
+                  <i data-lucide="award" class="text-teal-400" width="24" height="24"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white">Our Mission</h3>
+              </div>
+              <p class="text-slate-300 leading-relaxed" id="company-mission"></p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-6" id="stats-grid"></div>
+        </div>
+      </section>
+
+      <!-- ===== SECTORS ===== -->
+      <section id="sectors" class="relative">
+        <div class="py-20 bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-center">
+          <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-5xl font-bold text-white mb-6">
+              Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500">Five Sectors</span>
+            </h2>
+            <p class="text-xl text-slate-300 max-w-3xl mx-auto">Comprehensive solutions across critical technology domains</p>
+          </div>
+        </div>
+        <div id="sectors-list"></div>
+      </section>
+
+      <!-- ===== BROCHURES ===== -->
+      <section id="brochures" class="py-24 bg-gradient-to-b from-[#1e293b] to-[#0f172a]">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-16">
+            <h2 class="text-4xl sm:text-5xl font-bold text-white mb-6">
+              Download <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500">Brochures</span>
+            </h2>
+            <p class="text-xl text-slate-300 max-w-3xl mx-auto">Get detailed information about our solutions and services</p>
+          </div>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto" id="brochures-grid"></div>
+        </div>
+      </section>
+
+      <!-- ===== CONTACT ===== -->
+      <section id="contact" class="py-24 bg-gradient-to-b from-[#0f172a] to-[#1e293b]">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-16">
+            <h2 class="text-4xl sm:text-5xl font-bold text-white mb-6">
+              Get in <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500">Touch</span>
+            </h2>
+            <p class="text-xl text-slate-300 max-w-3xl mx-auto">Let's discuss how we can help transform your infrastructure and operations</p>
+          </div>
+
+          <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            <!-- Contact info -->
+            <div class="space-y-8">
+              <div>
+                <h3 class="text-2xl font-bold text-white mb-6">Contact Information</h3>
+                <div class="space-y-6">
+                  <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0"><div class="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center"><i data-lucide="mail" class="text-cyan-400" width="20" height="20"></i></div></div>
+                    <div><p class="text-sm text-slate-400 mb-1">Email</p><a id="ci-email" href="#" class="text-white hover:text-cyan-400 transition-colors"></a></div>
+                  </div>
+                  <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0"><div class="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center"><i data-lucide="map-pin" class="text-cyan-400" width="20" height="20"></i></div></div>
+                    <div><p class="text-sm text-slate-400 mb-1">Address</p><p class="text-white" id="ci-address"></p></div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Connect With Us</h4>
+                <div class="flex space-x-4">
+                  <a id="ci-linkedin" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center hover:bg-cyan-600/30 transition-all"><i data-lucide="linkedin" class="text-cyan-400" width="20" height="20"></i></a>
+                  <a id="ci-twitter" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center hover:bg-cyan-600/30 transition-all"><i data-lucide="twitter" class="text-cyan-400" width="20" height="20"></i></a>
+                </div>
+              </div>
+
+              <div class="glass-effect rounded-xl p-8 h-64 flex items-center justify-center">
+                <p class="text-slate-400 text-center">Interactive Map<br /><span class="text-sm">Location visualization coming soon</span></p>
+              </div>
+            </div>
+
+            <!-- Contact form -->
+            <div class="glass-effect rounded-2xl p-8">
+              <form onsubmit="submitContact(event)" class="space-y-6">
+                <div class="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label for="name" class="block text-sm font-medium text-slate-300 mb-2">Full Name *</label>
+                    <input id="name" name="name" type="text" required placeholder="John Doe"
+                      class="w-full rounded-md bg-slate-800/50 border border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none px-3 py-2" />
+                  </div>
+                  <div>
+                    <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Email Address *</label>
+                    <input id="email" name="email" type="email" required placeholder="john@example.com"
+                      class="w-full rounded-md bg-slate-800/50 border border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none px-3 py-2" />
+                  </div>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label for="company" class="block text-sm font-medium text-slate-300 mb-2">Company Name</label>
+                    <input id="company" name="company" type="text" placeholder="Your Company"
+                      class="w-full rounded-md bg-slate-800/50 border border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none px-3 py-2" />
+                  </div>
+                  <div>
+                    <label for="phone" class="block text-sm font-medium text-slate-300 mb-2">Phone Number</label>
+                    <input id="phone" name="phone" type="tel" placeholder="+1 234 567 8900"
+                      class="w-full rounded-md bg-slate-800/50 border border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none px-3 py-2" />
+                  </div>
+                </div>
+                <div>
+                  <label for="subject" class="block text-sm font-medium text-slate-300 mb-2">Subject *</label>
+                  <input id="subject" name="subject" type="text" required placeholder="How can we help you?"
+                    class="w-full rounded-md bg-slate-800/50 border border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none px-3 py-2" />
+                </div>
+                <div>
+                  <label for="message" class="block text-sm font-medium text-slate-300 mb-2">Message *</label>
+                  <textarea id="message" name="message" required rows="5" placeholder="Tell us about your project or inquiry..."
+                    class="w-full rounded-md bg-slate-800/50 border border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none px-3 py-2 resize-none"></textarea>
+                </div>
+                <button type="submit" id="contact-submit"
+                  class="w-full inline-flex items-center justify-center bg-cyan-600 hover:bg-cyan-700 text-white py-4 text-lg rounded-md transition-all duration-300 shadow-lg shadow-cyan-600/50 hover:shadow-cyan-600/70 group">
+                  <i data-lucide="send" width="20" height="20" class="mr-2 group-hover:translate-x-1 transition-transform"></i>
+                  <span id="contact-submit-text">Send Message</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ============ SECTOR DETAIL VIEW ============ -->
+  <div id="detail-view" style="display:none"></div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="bg-[#0a1628] border-t border-slate-800">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div class="lg:col-span-1">
+          <div class="flex items-center space-x-3 mb-6">
+            <img src="https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/qzcsszw7_no%20bg%20logo%20wo.png" alt="World One Enterprise Logo" class="w-12 h-12 object-contain" />
+            <span class="text-xl font-bold text-white">World One</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-6 leading-relaxed">Pioneering the future of technology and innovation across five critical sectors.</p>
+          <div class="flex space-x-4">
+            <a id="footer-linkedin" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center hover:bg-cyan-600/20 hover:text-cyan-400 text-slate-400 transition-all"><i data-lucide="linkedin" width="18" height="18"></i></a>
+            <a id="footer-twitter" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center hover:bg-cyan-600/20 hover:text-cyan-400 text-slate-400 transition-all"><i data-lucide="twitter" width="18" height="18"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-white font-semibold text-lg mb-6">Quick Links</h3>
+          <ul class="space-y-3">
+            <li><button onclick="goToSection('home')"      class="text-slate-400 hover:text-cyan-400 transition-colors text-sm bg-transparent border-none cursor-pointer p-0">Home</button></li>
+            <li><button onclick="goToSection('about')"     class="text-slate-400 hover:text-cyan-400 transition-colors text-sm bg-transparent border-none cursor-pointer p-0">About</button></li>
+            <li><button onclick="goToSection('sectors')"   class="text-slate-400 hover:text-cyan-400 transition-colors text-sm bg-transparent border-none cursor-pointer p-0">Sectors</button></li>
+            <li><button onclick="goToSection('brochures')" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm bg-transparent border-none cursor-pointer p-0">Brochures</button></li>
+            <li><button onclick="goToSection('contact')"   class="text-slate-400 hover:text-cyan-400 transition-colors text-sm bg-transparent border-none cursor-pointer p-0">Contact</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-white font-semibold text-lg mb-6">Our Sectors</h3>
+          <ul class="space-y-3">
+            <li><button onclick="goToSection('sectors')" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm bg-transparent border-none cursor-pointer p-0">AI Data Centre</button></li>
+            <li><button onclick="goToSection('sectors')" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm bg-transparent border-none cursor-pointer p-0">Surveillance System</button></li>
+            <li><button onclick="goToSection('sectors')" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm bg-transparent border-none cursor-pointer p-0">Tactical Defence</button></li>
+            <li><button onclick="goToSection('sectors')" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm bg-transparent border-none cursor-pointer p-0">Hypercube Data Centre</button></li>
+            <li><button onclick="goToSection('sectors')" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm bg-transparent border-none cursor-pointer p-0">Green Energy</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-white font-semibold text-lg mb-6">Contact Us</h3>
+          <ul class="space-y-4">
+            <li class="flex items-start space-x-3"><i data-lucide="mail" class="text-cyan-400 flex-shrink-0 mt-1" width="16" height="16"></i><a id="footer-email" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm"></a></li>
+            <li class="flex items-start space-x-3"><i data-lucide="map-pin" class="text-cyan-400 flex-shrink-0 mt-1" width="16" height="16"></i><span class="text-slate-400 text-sm" id="footer-address"></span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-800 py-8">
+        <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          <p class="text-slate-400 text-sm text-center md:text-left">© <span id="year"></span> World One Enterprise. All rights reserved.</p>
+          <div class="flex space-x-6">
+            <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm">Privacy Policy</a>
+            <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm">Terms of Service</a>
+            <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <!-- ============ DATA + LOGIC ============ -->
+  <script>
+  /* ---------------- DATA ---------------- */
+  const companyInfo = {
+    name: 'World One Enterprise',
+    description: 'World One Enterprise stands at the forefront of technological advancement, delivering cutting-edge solutions across five critical sectors that shape the future of infrastructure, security, and sustainability.',
+    vision: 'To be the global leader in integrated technology solutions, driving innovation that transforms industries and empowers nations.',
+    mission: 'Delivering world-class infrastructure and intelligent systems that create sustainable value for governments, enterprises, and communities worldwide.'
+  };
+
+  const stats = [
+    { label: 'Megawatts Power Capacity', value: '1000+', icon: 'zap' },
+    { label: 'AI PetaFLOPS Performance', value: '480+', icon: 'cpu' },
+    { label: 'Cell Towers Transformed', value: '810K+', icon: 'radio' },
+    { label: 'Countries Served', value: '15+', icon: 'globe' }
+  ];
+
+  const contactInfo = {
+    email: 'info@worldoneenterprise.com',
+    phone: '+91 22 1234 5678',
+    address: 'World One Tower, Mumbai, Maharashtra, India',
+    linkedin: 'https://linkedin.com/company/worldoneenterprise',
+    twitter: 'https://twitter.com/worldoneent'
+  };
+
+  const HERO_SLIDES = [
+    { image: 'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/pnuct6dh_WhatsApp%20Image%202026-05-22%20at%2023.46.54.jpeg', sector: 'AI Data Centre' },
+    { image: 'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/vhiu62hg_WhatsApp%20Image%202026-05-23%20at%2012.50.42.jpeg', sector: 'Hypercube Data Centre' },
+    { image: 'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/uffz2t6g_Gemini_Generated_Image_ws9c7mws9c7mws9c.png', sector: 'Surveillance System' },
+    { image: 'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/brmslvzt_WhatsApp%20Image%202026-05-23%20at%2013.35.56.jpeg', sector: 'Tactical Defence' },
+    { image: 'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/evd3ejn8_ChatGPT%20Image%20May%2023%2C%202026%2C%2001_33_07%20PM.png', sector: 'Green Energy' },
+    { image: 'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/hvtj9xx8_Gemini_Generated_Image_8s1um68s1um68s1u.png', sector: 'AI Data Centre' },
+    { image: 'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/lhuym3nb_ChatGPT%20Image%20May%2023%2C%202026%2C%2012_56_53%20AM.png', sector: 'Green Energy' },
+  ];
+
+  const SECTOR_HERO_IMAGES = {
+    'ai-datacenter':    'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/hvtj9xx8_Gemini_Generated_Image_8s1um68s1um68s1u.png',
+    'surveillance':     'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/uffz2t6g_Gemini_Generated_Image_ws9c7mws9c7mws9c.png',
+    'tactical-defence': 'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/brmslvzt_WhatsApp%20Image%202026-05-23%20at%2013.35.56.jpeg',
+    'hypercube':        'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/vhiu62hg_WhatsApp%20Image%202026-05-23%20at%2012.50.42.jpeg',
+    'green-energy':     'https://customer-assets.emergentagent.com/job_unified-sectors-hub/artifacts/lhuym3nb_ChatGPT%20Image%20May%2023%2C%202026%2C%2012_56_53%20AM.png',
+  };
+
+  const sectors = [
+    {
+      id: 'ai-datacenter', title: 'AI Data Centre', subtitle: 'Astra Cyber City', icon: 'database',
+      description: 'Astra Cyber City represents a groundbreaking "Concept-to-Compute" solution, delivering a 500 Megawatt campus purpose-built for High-Performance Computing and next-generation AI workloads. Located strategically in Sindhudurg on India\'s western coast, this Tier-IV facility provides ultra-low latency connectivity to the Middle East and Europe.',
+      features: [
+        { title: 'Massive Scale', description: '500 MW campus designed for extreme AI workloads', icon: 'server' },
+        { title: 'Tier-IV Engineering', description: 'Future-proof infrastructure with 99.995% uptime', icon: 'shield' },
+        { title: 'Net-Zero Commitment', description: '100% renewable energy powered operations', icon: 'leaf' },
+        { title: 'Smart City Integration', description: 'Complete ecosystem for 25,000+ tech professionals', icon: 'building-2' },
+        { title: 'Ultra-Low Latency', description: 'Strategic location near subsea cable landing stations', icon: 'workflow' },
+        { title: 'Rapid Deployment', description: '2 years from groundbreaking to full operations', icon: 'rocket' }
+      ],
+      specifications: [
+        { label: 'Power Capacity', value: '500 MW' }, { label: 'Tier Standard', value: 'Tier-IV' },
+        { label: 'Uptime Guarantee', value: '99.995%' }, { label: 'Deployment Timeline', value: '24 Months' },
+        { label: 'Renewable Energy', value: '100%' }, { label: 'Data Center Racks', value: '15,000+' }
+      ]
+    },
+    {
+      id: 'surveillance', title: 'Surveillance System', subtitle: 'Hawkeye-Sentinel', icon: 'eye',
+      description: 'Hawkeye-Sentinel redefines security through an advanced AI-based surveillance platform that seamlessly integrates drones, cameras, and smart sensors. With real-time processing capabilities and multi-sensor fusion, this system provides unprecedented situational awareness and rapid threat response.',
+      features: [
+        { title: 'Real-time Processing', description: 'Instantaneous analysis of vast data streams', icon: 'gauge' },
+        { title: 'Multi-sensor Fusion', description: 'Integrated drones, cameras, and smart sensors', icon: 'radar' },
+        { title: 'Advanced AI Detection', description: '95%+ accuracy in threat identification', icon: 'target' },
+        { title: 'Edge AI Computing', description: 'Autonomous decision-making in the field', icon: 'cpu' },
+        { title: 'Ultra-Low Latency', description: 'Sub-100ms response time for critical operations', icon: 'zap' },
+        { title: 'Privacy Safeguards', description: 'Constitutional protections integrated', icon: 'shield-check' }
+      ],
+      specifications: [
+        { label: 'Threat Detection Accuracy', value: '95%+' }, { label: 'Response Time', value: '2-3 Minutes' },
+        { label: 'System Uptime', value: '99.7%' }, { label: 'Drone Fleet', value: '110 Units' },
+        { label: 'Video Latency', value: '<100ms' }, { label: 'Coverage Area', value: 'Unlimited' }
+      ]
+    },
+    {
+      id: 'tactical-defence', title: 'Tactical Defence', subtitle: 'Advanced Defense Solutions', icon: 'shield',
+      description: 'Our Tactical Defence division delivers cutting-edge military-grade solutions combining artificial intelligence, autonomous systems, and advanced cybersecurity. Designed for mission-critical operations, these systems provide strategic advantages in modern warfare and national security scenarios.',
+      features: [
+        { title: 'AI-Powered Analytics', description: 'Predictive threat assessment and strategic intelligence', icon: 'brain' },
+        { title: 'Autonomous Systems', description: 'Unmanned platforms for reconnaissance and defense', icon: 'bot' },
+        { title: 'Cyber Defense Suite', description: 'Military-grade encryption and threat mitigation', icon: 'lock' },
+        { title: 'Command & Control', description: 'Integrated C4ISR systems for unified operations', icon: 'radio' },
+        { title: 'Electronic Warfare', description: 'RF jamming and signal intelligence capabilities', icon: 'waves' },
+        { title: 'Rapid Deployment', description: 'Mobile units ready for immediate field operations', icon: 'truck' }
+      ],
+      specifications: [
+        { label: 'Response Time', value: 'Real-time' }, { label: 'Encryption Level', value: 'Military-Grade' },
+        { label: 'System Integration', value: 'C4ISR' }, { label: 'Autonomous Platforms', value: 'Multi-domain' },
+        { label: 'Threat Detection', value: '99%+' }, { label: 'Operational Range', value: 'Extended' }
+      ]
+    },
+    {
+      id: 'hypercube', title: 'Hypercube Data Centre', subtitle: 'Sovereign AI Supercomputing', icon: 'box',
+      description: 'Hypercube represents the pinnacle of sovereign AI supercomputing infrastructure. Built with NVIDIA GB300 GPUs and modular ARMADA containers, this system delivers 480 PetaFLOPS of AI performance with industry-leading efficiency and data sovereignty compliance.',
+      features: [
+        { title: 'Massive AI Performance', description: '480 PetaFLOPS FP4 computational power', icon: 'cpu' },
+        { title: 'Sovereign Architecture', description: 'DPDP Act 2023 compliant infrastructure', icon: 'flag' },
+        { title: 'Rapid Deployment', description: '16 weeks from procurement to commissioning', icon: 'timer' },
+        { title: 'Modular Design', description: 'Scalable ARMADA container system', icon: 'package' },
+        { title: 'Ultra-Efficient Cooling', description: 'PUE 1.05-1.08 with direct liquid cooling', icon: 'droplet' },
+        { title: 'High ROI', description: '26-37 months payback period', icon: 'trending-up' }
+      ],
+      specifications: [
+        { label: 'FP4 Performance', value: '480 PetaFLOPS' }, { label: 'Total GPUs', value: '576 GB300' },
+        { label: 'Memory Bandwidth', value: '130 TB/s' }, { label: 'Power Capacity', value: '2.5 MW' },
+        { label: 'Deployment Time', value: '16 Weeks' }, { label: 'PUE Efficiency', value: '1.05-1.08' }
+      ]
+    },
+    {
+      id: 'green-energy', title: 'Green Energy', subtitle: 'HYMAX Cell Tower Solutions', icon: 'wind',
+      description: 'HYMAX transforms India\'s telecom infrastructure with patented hybrid renewable energy solutions. Combining solar panels, vertical axis wind turbines, and intelligent battery systems, HYMAX eliminates dependency on diesel generators while delivering exceptional financial returns.',
+      features: [
+        { title: 'Hybrid Power System', description: 'Solar + wind + battery integration', icon: 'sun' },
+        { title: 'Exceptional ROI', description: '37.33% annual return on investment', icon: 'dollar-sign' },
+        { title: 'Rapid Payback', description: 'Full investment recovery in 2.68 years', icon: 'timer' },
+        { title: 'Intelligent Control', description: 'ICS system for optimal power management', icon: 'settings' },
+        { title: 'Patent Protection', description: 'Exclusive rights for green cell towers', icon: 'award' },
+        { title: 'Zero Emissions', description: 'Complete elimination of diesel generators', icon: 'leaf' }
+      ],
+      specifications: [
+        { label: 'ROI', value: '37.33%' }, { label: 'Payback Period', value: '2.68 Years' },
+        { label: 'Power Replacement', value: '90-100%' }, { label: 'Annual Savings', value: '$5,649' },
+        { label: 'Market Size', value: '810K Towers' }, { label: 'Carbon Reduction', value: '100%' }
+      ]
+    }
+  ];
+
+  const brochures = [
+    { id: 1, title: 'AI Data Centre - Astra Cyber City', description: 'Comprehensive overview of our 500 MW AI-ready infrastructure', fileSize: '8.8 MB', pages: 17, category: 'AI Infrastructure', file: 'Astra-Cyber-City-World-Class-Consortium-Driving-Indias-AI-Future.pdf' },
+    { id: 2, title: 'Hawkeye-Sentinel Surveillance System', description: 'Advanced AI-based integrated surveillance solutions', fileSize: '3.8 MB', pages: 32, category: 'Security' },
+    { id: 3, title: 'Tactical Defence Solutions', description: 'Military-grade defense systems and cybersecurity', fileSize: '2.9 MB', pages: 18, category: 'Defense' },
+    { id: 4, title: 'Hypercube Sovereign AI', description: 'Modular AI supercomputing infrastructure specifications', fileSize: '5.1 MB', pages: 28, category: 'AI Infrastructure' },
+    { id: 5, title: 'HYMAX Green Energy', description: 'Hybrid renewable energy solutions for telecom', fileSize: '3.2 MB', pages: 20, category: 'Sustainability' },
+    { id: 6, title: 'Corporate Overview', description: 'Complete portfolio of World One Enterprise solutions', fileSize: '6.5 MB', pages: 42, category: 'Corporate' }
+  ];
+
+  /* ---- Detailed per-sector content for the detail pages ---- */
+  const sectorDetails = {
+    'ai-datacenter': {
+      overview: { description: 'A groundbreaking "Concept-to-Compute" solution that represents a paradigm shift in how AI infrastructure is conceived, built, and operated. This 500 Megawatt campus in Sindhudurg, Maharashtra, is strategically positioned to become South Asia\'s premier AI computing destination.',
+        highlights: ['World-class consortium with proven track record in data center development','Strategic location near major subsea cable landing stations','Tier-IV engineering with 99.995% uptime guarantee','Complete ecosystem for 25,000+ technology professionals','100% renewable energy commitment','Rapid 24-month deployment timeline'] },
+      keyCapabilities: [
+        { title: 'Massive Scale Infrastructure', description: '500 MW of power capacity across a purpose-built campus designed specifically for high-density AI workloads and next-generation computing requirements.', icon: 'zap' },
+        { title: 'Ultra-Low Latency Connectivity', description: 'Proximate to major subsea cable landing stations, providing direct connectivity to Middle East and Europe with minimal latency.', icon: 'wifi' },
+        { title: 'Sovereign Infrastructure', description: 'Provides the bedrock for India\'s AI transformation with complete data sovereignty and compliance with national regulations.', icon: 'flag' },
+        { title: 'Smart City Integration', description: 'Beyond server infrastructure, includes housing, amenities, and facilities for 25,000 technology professionals.', icon: 'building-2' },
+        { title: 'Advanced Cooling Systems', description: 'Critical power and advanced cooling architecture designed to handle extreme heat density of AI processors.', icon: 'droplet' },
+        { title: 'Enterprise Security', description: 'Military-grade security protocols and hybrid cloud architecture ensuring data sovereignty and compliance.', icon: 'shield-check' }
+      ],
+      technicalSpecs: {
+        infrastructure: [ {label:'Total Power Capacity',value:'500 MW (5 x 100 MW)'},{label:'Tier Standard',value:'Tier-IV Certified'},{label:'Uptime Guarantee',value:'99.995%'},{label:'Data Center Racks',value:'15,000+'},{label:'Campus Area',value:'500 Acres'},{label:'Location',value:'Sindhudurg, Maharashtra'} ],
+        energy: [ {label:'Renewable Energy',value:'100% Committed'},{label:'Power Source',value:'Solar + Wind'},{label:'Energy Redundancy',value:'N+1 Configuration'},{label:'PUE Target',value:'<1.3'},{label:'Sustainability',value:'Net-Zero Operations'},{label:'Carbon Footprint',value:'Minimal'} ],
+        connectivity: [ {label:'Network Capacity',value:'Multi-Terabit'},{label:'Subsea Cable Access',value:'Direct'},{label:'Latency to ME',value:'<50ms'},{label:'Latency to Europe',value:'<100ms'},{label:'Network Redundancy',value:'Multi-path'},{label:'Carrier Neutral',value:'Yes'} ]
+      },
+      useCases: [
+        { title: 'AI Model Training', description: 'Large-scale training of foundation models, LLMs, and deep learning networks requiring massive compute power.', icon: 'brain' },
+        { title: 'Healthcare & Genomics', description: 'Processing medical imaging, genomic sequencing, and drug discovery workloads for India\'s 1.4 billion population.', icon: 'heart' },
+        { title: 'Smart Governance', description: 'Government AI initiatives, digital public infrastructure, and sovereign cloud services.', icon: 'building' },
+        { title: 'Financial Services', description: 'High-frequency trading, risk analysis, fraud detection, and real-time transaction processing.', icon: 'dollar-sign' },
+        { title: 'Research & Education', description: 'Academic research, scientific computing, and AI education for institutions across South Asia.', icon: 'graduation-cap' },
+        { title: 'Enterprise AI', description: 'Business intelligence, predictive analytics, and AI-powered enterprise applications.', icon: 'briefcase' }
+      ],
+      consortium: [
+        { name: 'World One Enterprises', role: 'Consortium Leader', description: 'Project orchestration, stakeholder management, and strategic partnerships' },
+        { name: 'Sterling and Wilson', role: 'EPC & MEP Excellence', description: 'World-leading data center construction and infrastructure delivery' },
+        { name: 'IBM', role: 'AI & Hybrid Cloud', description: 'Advanced AI infrastructure, hybrid cloud solutions, and systems management' },
+        { name: 'UB Tech', role: 'Advanced Solutions', description: 'Automation, predictive maintenance, and intelligent facility management' },
+        { name: 'G42 & Stargate', role: 'Technology Partners', description: 'AI expertise and global best practices' }
+      ]
+    },
+    'surveillance': {
+      overview: { description: 'The world\'s first fully integrated AI-based surveillance system that redefines security through intelligent monitoring, multi-sensor fusion, and real-time threat response. Combining drones, cameras, and edge AI for unprecedented situational awareness.',
+        highlights: ['Real-time processing with sub-100ms latency','Multi-sensor fusion (drones, cameras, RF, acoustic)','95%+ threat detection accuracy','Edge AI for autonomous decision-making','Privacy-compliant architecture','110 specialized drones for diverse missions'] },
+      keyCapabilities: [
+        { title: 'Multi-Sensor Integration', description: 'Seamless fusion of EO/IR cameras, radar systems, RF sensors, and acoustic arrays for comprehensive coverage.', icon: 'radar' },
+        { title: 'Edge AI Processing', description: 'Real-time analytics at the edge with autonomous decision-making capabilities directly in the field.', icon: 'cpu' },
+        { title: 'Drone Fleet Management', description: 'Coordinated operation of 110 drones including surveillance, interceptor, and tactical support units.', icon: 'plane' },
+        { title: 'Threat Detection', description: 'Advanced AI algorithms achieving 95%+ accuracy in identifying and classifying potential threats.', icon: 'target' },
+        { title: 'Emergency Response', description: 'Integrated with fire, EMS, and disaster response systems for rapid incident response.', icon: 'alert-triangle' },
+        { title: 'Privacy Protection', description: 'Built-in safeguards maintaining constitutional protections and civil liberties.', icon: 'shield-check' }
+      ],
+      technicalSpecs: {
+        performance: [ {label:'Detection Accuracy',value:'95%+'},{label:'Response Time',value:'2-3 Minutes'},{label:'Video Latency',value:'<100ms'},{label:'System Uptime',value:'99.7%'},{label:'Processing Speed',value:'Real-time'},{label:'Coverage Area',value:'Scalable'} ],
+        drones: [ {label:'Multi-Rotor Units',value:'50 Units'},{label:'Fixed-Wing Units',value:'20 Units'},{label:'Interceptor Drones',value:'15 Units'},{label:'Tactical Support',value:'25 Units'},{label:'Flight Endurance',value:'Up to 3 Hours'},{label:'Camera Resolution',value:'Up to 8MP'} ],
+        ai: [ {label:'Object Recognition',value:'95%+ Accuracy'},{label:'Anomaly Detection',value:'Behavioral AI'},{label:'Predictive Analytics',value:'Enabled'},{label:'AR Overlays',value:'Geospatial'},{label:'Model Training',value:'Continuous'},{label:'Edge Compute',value:'Ambarella CV75'} ]
+      },
+      useCases: [
+        { title: 'Border Security', description: 'Perimeter monitoring, intrusion detection, and unauthorized access prevention for critical borders.', icon: 'shield' },
+        { title: 'Smart City Monitoring', description: 'Traffic flow analysis, crowd management, and public safety monitoring in urban areas.', icon: 'building-2' },
+        { title: 'Critical Infrastructure', description: 'Protection of power plants, water facilities, airports, and government installations.', icon: 'factory' },
+        { title: 'Emergency Response', description: 'Fire, EMS, disaster response coordination, and search and rescue operations.', icon: 'ambulance' },
+        { title: 'Event Security', description: 'Large gathering monitoring, crowd density mapping, and VIP protection.', icon: 'users' },
+        { title: 'Industrial Safety', description: 'Construction site monitoring, hazardous area assessment, and worker safety compliance.', icon: 'hard-hat' }
+      ]
+    },
+    'tactical-defence': {
+      overview: { description: 'Next-generation military-grade defense systems integrating artificial intelligence, autonomous platforms, and advanced cybersecurity for mission-critical operations and national security.',
+        highlights: ['AI-powered threat assessment','Autonomous defense platforms','Military-grade encryption','Integrated C4ISR systems','Electronic warfare capabilities','Rapid deployment ready'] },
+      keyCapabilities: [
+        { title: 'AI Analytics', description: 'Predictive threat assessment, strategic intelligence, and real-time situational awareness.', icon: 'brain' },
+        { title: 'Autonomous Systems', description: 'Unmanned platforms for reconnaissance, surveillance, and defensive operations.', icon: 'bot' },
+        { title: 'Cyber Defense', description: 'Military-grade encryption, threat mitigation, and network security protocols.', icon: 'lock' },
+        { title: 'Command & Control', description: 'Integrated C4ISR systems for unified command, control, communications, and intelligence.', icon: 'radio' },
+        { title: 'Electronic Warfare', description: 'RF jamming, signal intelligence, and electronic countermeasure capabilities.', icon: 'waves' },
+        { title: 'Rapid Deployment', description: 'Mobile units ready for immediate field operations in any terrain.', icon: 'truck' }
+      ],
+      technicalSpecs: {
+        systems: [ {label:'Response Time',value:'Real-time'},{label:'Encryption Level',value:'Military-Grade'},{label:'System Integration',value:'C4ISR'},{label:'Threat Detection',value:'99%+'},{label:'Operational Range',value:'Extended'},{label:'Platform Type',value:'Multi-domain'} ],
+        capabilities: [ {label:'AI Processing',value:'Edge + Cloud'},{label:'Autonomous Ops',value:'Full Spectrum'},{label:'Cyber Defense',value:'Advanced'},{label:'EW Capability',value:'Comprehensive'},{label:'ISR Integration',value:'Complete'},{label:'Deployment',value:'Rapid'} ],
+        security: [ {label:'Data Protection',value:'AES-256'},{label:'Network Security',value:'Zero Trust'},{label:'Access Control',value:'Biometric'},{label:'Threat Intel',value:'Real-time'},{label:'Compliance',value:'Military Standards'},{label:'Redundancy',value:'Multi-layer'} ]
+      },
+      useCases: [
+        { title: 'Border Defense', description: 'Autonomous monitoring and threat detection systems for national borders.', icon: 'shield' },
+        { title: 'Naval Operations', description: 'Maritime surveillance, threat assessment, and naval defense systems.', icon: 'anchor' },
+        { title: 'Air Defense', description: 'Integrated air defense systems with autonomous threat detection and response.', icon: 'plane' },
+        { title: 'Cyber Warfare', description: 'Defensive and offensive cyber capabilities for network operations.', icon: 'lock' },
+        { title: 'Intelligence Ops', description: 'Advanced ISR systems for reconnaissance and intelligence gathering.', icon: 'eye' },
+        { title: 'Urban Combat', description: 'Tactical systems for urban warfare and counter-terrorism operations.', icon: 'building' }
+      ]
+    },
+    'hypercube': {
+      overview: { description: 'A revolutionary modular AI infrastructure delivering 480 PetaFLOPS of computing power with complete data sovereignty. Built with NVIDIA GB300 GPUs in containerized ARMADA pods for rapid deployment and exceptional efficiency.',
+        highlights: ['480 PetaFLOPS FP4 performance','576 NVIDIA GB300 GPUs','16-week rapid deployment','PUE 1.05-1.08 efficiency','DPDP Act 2023 compliant','26-37 month payback period'] },
+      keyCapabilities: [
+        { title: 'Massive AI Performance', description: '480 PetaFLOPS FP4 computational power with 720 PFLOPS FP8 tensor core performance.', icon: 'cpu' },
+        { title: 'Sovereign Architecture', description: 'Complete data sovereignty compliance with DPDP Act 2023 and onshore processing.', icon: 'flag' },
+        { title: 'Modular Design', description: 'ARMADA container system enabling rapid deployment and easy scalability.', icon: 'package' },
+        { title: 'Ultra-Efficient Cooling', description: 'Direct liquid cooling achieving PUE 1.05-1.08 with 90% less water usage.', icon: 'droplet' },
+        { title: 'Rapid Deployment', description: 'Complete setup in just 16 weeks from procurement to commissioning.', icon: 'rocket' },
+        { title: 'High ROI', description: 'Exceptional financial returns with 26-37 month payback period.', icon: 'trending-up' }
+      ],
+      technicalSpecs: {
+        compute: [ {label:'FP4 Performance',value:'480 PetaFLOPS'},{label:'FP8 Performance',value:'720 PFLOPS'},{label:'Total GPUs',value:'576 GB300'},{label:'Memory Pool',value:'30 TB Unified'},{label:'Memory Bandwidth',value:'130 TB/s'},{label:'NVLink Fabric',value:'6th Gen'} ],
+        infrastructure: [ {label:'Power Capacity',value:'2.5 MW'},{label:'Container Config',value:'4x ARMADA'},{label:'Storage Throughput',value:'500+ GB/s'},{label:'Network Speed',value:'800 Gb/s'},{label:'PUE Efficiency',value:'1.05-1.08'},{label:'Deployment Time',value:'16 Weeks'} ],
+        economics: [ {label:'Total CapEx',value:'$105M'},{label:'Annual Revenue',value:'$44.36M'},{label:'EBITDA Margin',value:'89-92%'},{label:'Payback Period',value:'26-37 Months'},{label:'IRR',value:'29-35%'},{label:'ROI',value:'Exceptional'} ]
+      },
+      useCases: [
+        { title: 'Sovereign LLMs', description: 'Training and inference for national language models (BharatGen) with complete data sovereignty.', icon: 'message-square' },
+        { title: 'Defense & Security', description: 'Classified AI workloads, military applications, and national security operations.', icon: 'shield' },
+        { title: 'Healthcare AI', description: 'Medical imaging analysis, drug discovery, genomic research, and healthcare analytics.', icon: 'heart' },
+        { title: 'Climate Research', description: 'Weather modeling, climate prediction, agricultural analytics, and environmental studies.', icon: 'cloud' },
+        { title: 'Smart Governance', description: 'Government AI initiatives, digital infrastructure, and public service optimization.', icon: 'building' },
+        { title: 'Research & Education', description: 'Academic AI research, scientific computing, and advanced education programs.', icon: 'graduation-cap' }
+      ]
+    },
+    'green-energy': {
+      overview: { description: 'A patented hybrid renewable energy solution transforming India\'s 810,000+ cell towers. Combining solar, wind, and intelligent battery systems to eliminate diesel dependency while delivering 37% annual ROI.',
+        highlights: ['37.33% annual ROI','2.68 year payback period','90-100% power replacement','Patented technology with exclusive rights','Zero diesel dependency','Proven with major telecom operators'] },
+      keyCapabilities: [
+        { title: 'Hybrid Power System', description: 'Integrated solar panels, vertical axis wind turbines, and advanced battery storage.', icon: 'zap' },
+        { title: 'Intelligent Control', description: 'ICS system optimizing power distribution and management for maximum efficiency.', icon: 'settings' },
+        { title: 'Exceptional ROI', description: '37.33% annual return on investment with proven financial viability.', icon: 'dollar-sign' },
+        { title: 'Rapid Payback', description: 'Complete investment recovery in just 2.68 years with sustained returns.', icon: 'timer' },
+        { title: 'Patent Protection', description: 'Exclusive patent rights granted by Government of India for green cell towers.', icon: 'award' },
+        { title: 'Zero Emissions', description: 'Complete elimination of diesel generators and carbon emissions.', icon: 'leaf' }
+      ],
+      technicalSpecs: {
+        system: [ {label:'Solar Capacity',value:'5 KW'},{label:'Wind Turbines',value:'2 Units'},{label:'Battery Storage',value:'10 KW/10KVA'},{label:'Power Replacement',value:'90-100%'},{label:'System Uptime',value:'24/7'},{label:'Warranty',value:'10+ Years'} ],
+        financial: [ {label:'Total CapEx',value:'$16,950'},{label:'Annual Savings',value:'$5,650'},{label:'Annual Revenue',value:'$6,780'},{label:'ROI',value:'37.33%'},{label:'Payback Period',value:'2.68 Years'},{label:'Net Cashflow',value:'$6,328/year'} ],
+        market: [ {label:'Current Towers',value:'810,000'},{label:'Target by 2027',value:'1.5 Million'},{label:'Market Opportunity',value:'$10 Billion'},{label:'Diesel Eliminated',value:'5B Liters/year'},{label:'CO2 Reduction',value:'12M Tonnes/year'},{label:'Partners',value:'All Major Telcos'} ]
+      },
+      useCases: [
+        { title: 'Cell Tower Conversion', description: 'Retrofitting existing towers with hybrid renewable energy to eliminate diesel dependency.', icon: 'radio' },
+        { title: '5G Infrastructure', description: 'Powering new 5G tower deployments with sustainable energy from day one.', icon: 'wifi' },
+        { title: 'Remote Locations', description: 'Enabling reliable connectivity in areas with poor grid infrastructure.', icon: 'map-pin' },
+        { title: 'Disaster Resilience', description: 'Maintaining communications during grid failures, natural disasters, and emergencies.', icon: 'shield' },
+        { title: 'Cost Optimization', description: 'Reducing operational expenses for telecom operators through renewable energy.', icon: 'trending-down' },
+        { title: 'Sustainability Goals', description: 'Helping operators meet carbon neutrality targets and ESG commitments.', icon: 'leaf' }
+      ]
+    }
+  };
+
+  /* ---------------- HELPERS ---------------- */
+  const $ = (sel) => document.querySelector(sel);
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function refreshIcons(){ if (window.lucide) lucide.createIcons(); }
+
+  /* ---------------- TOAST ---------------- */
+  function showToast(title, desc, variant){
+    const c = $('#toast-container');
+    const t = document.createElement('div');
+    t.className = 'toast' + (variant === 'destructive' ? ' destructive' : '');
+    t.innerHTML = '<div class="toast-title">'+esc(title)+'</div><div class="toast-desc">'+esc(desc)+'</div>';
+    c.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 4000);
+  }
+
+  /* ---------------- NAVIGATION ---------------- */
+  let currentView = 'home'; // 'home' | sectorId
+
+  function showHome(){
+    currentView = 'home';
+    $('#detail-view').style.display = 'none';
+    $('#detail-view').innerHTML = '';
+    $('#home-view').style.display = 'block';
+  }
+
+  function goHome(){
+    closeMobileMenu();
+    if (currentView === 'home') { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    else { showHome(); window.scrollTo({ top: 0, behavior: 'auto' }); }
+  }
+
+  function goToSection(section){
+    closeMobileMenu();
+    const scrollTo = () => {
+      if (section === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
+      else document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' });
+    };
+    if (currentView === 'home') { scrollTo(); }
+    else { showHome(); setTimeout(scrollTo, 60); }
+  }
+
+  /* ---------------- MOBILE MENU ---------------- */
+  let mobileOpen = false;
+  function toggleMobileMenu(){ mobileOpen = !mobileOpen; renderMobileMenu(); }
+  function closeMobileMenu(){ mobileOpen = false; renderMobileMenu(); }
+  function renderMobileMenu(){
+    $('#mobile-menu').style.display = mobileOpen ? 'block' : 'none';
+    $('#menu-icon').style.display = mobileOpen ? 'none' : 'inline-block';
+    $('#close-icon').style.display = mobileOpen ? 'inline-block' : 'none';
+  }
+
+  /* ---------------- HEADER SCROLL ---------------- */
+  window.addEventListener('scroll', () => {
+    const h = $('#site-header');
+    if (window.scrollY > 20) {
+      h.className = 'fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#0a1628]/95 backdrop-blur-md shadow-lg border-b border-slate-700/50';
+    } else {
+      h.className = 'fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent';
+    }
+  });
+
+  /* ---------------- HERO SLIDER + TYPING ---------------- */
+  const SLIDE_INTERVAL = 6500, TYPING_SPEED = 60;
+  let currentSlide = 0, rotationTimer = null, typingTimer = null;
+
+  function buildHero(){
+    const wrap = $('#hero-slides');
+    wrap.innerHTML = HERO_SLIDES.map((s, i) =>
+      '<div class="hero-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out '+(i===0?'opacity-100 z-[1]':'opacity-0 z-0')+'" data-i="'+i+'">'+
+        '<div class="hero-bg absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat '+(i===0?'animate-kenburns':'')+'" style="background-image:url(\''+s.image+'\')"></div>'+
+      '</div>').join('');
+
+    $('#hero-indicators').innerHTML = HERO_SLIDES.map((_, i) =>
+      '<button onclick="manualSlide('+i+')" aria-label="Go to slide '+(i+1)+'" class="hero-ind h-2 rounded-full transition-all duration-500 '+(i===0?'w-12 bg-amber-300 shadow-lg shadow-amber-300/50':'w-2 bg-white/50 hover:bg-white/80')+'"></button>').join('');
+  }
+
+  function applySlide(idx){
+    document.querySelectorAll('.hero-slide').forEach((el) => {
+      const i = +el.dataset.i;
+      el.className = 'hero-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ' + (i===idx ? 'opacity-100 z-[1]' : 'opacity-0 z-0');
+      const bg = el.querySelector('.hero-bg');
+      bg.className = 'hero-bg absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat' + (i===idx ? ' animate-kenburns' : '');
+      if (i===idx){ bg.style.animation = 'none'; void bg.offsetWidth; bg.style.animation = ''; }
+    });
+    document.querySelectorAll('.hero-ind').forEach((el, i) => {
+      el.className = 'hero-ind h-2 rounded-full transition-all duration-500 ' + (i===idx ? 'w-12 bg-amber-300 shadow-lg shadow-amber-300/50' : 'w-2 bg-white/50 hover:bg-white/80');
+    });
+    startTyping(idx);
+  }
+
+  function startTyping(idx){
+    if (typingTimer) clearTimeout(typingTimer);
+    const full = HERO_SLIDES[idx].sector;
+    const el = $('#typed-text'); el.textContent = '';
+    let n = 0;
+    const typeNext = () => { n++; el.textContent = full.slice(0, n); if (n < full.length) typingTimer = setTimeout(typeNext, TYPING_SPEED); };
+    typingTimer = setTimeout(typeNext, 500);
+  }
+
+  function startRotation(){
+    if (rotationTimer) clearInterval(rotationTimer);
+    rotationTimer = setInterval(() => { currentSlide = (currentSlide + 1) % HERO_SLIDES.length; applySlide(currentSlide); }, SLIDE_INTERVAL);
+  }
+  function manualSlide(i){ currentSlide = i; applySlide(i); startRotation(); }
+
+  /* ---------------- RENDER HOMEPAGE DYNAMIC PARTS ---------------- */
+  function iconSpan(name, cls, size){ return '<i data-lucide="'+name+'" class="'+(cls||'')+'" width="'+(size||24)+'" height="'+(size||24)+'"></i>'; }
+
+  function renderAbout(){
+    $('#company-description').textContent = companyInfo.description;
+    $('#company-vision').textContent = companyInfo.vision;
+    $('#company-mission').textContent = companyInfo.mission;
+    $('#stats-grid').innerHTML = stats.map(s =>
+      '<div class="glass-effect rounded-2xl p-6 text-center hover:border-cyan-500/30 transition-all duration-300 hover:scale-105">'+
+        '<div class="flex justify-center mb-4"><div class="w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-teal-600/20 rounded-full flex items-center justify-center">'+iconSpan(s.icon,'text-cyan-400',32)+'</div></div>'+
+        '<div class="text-4xl font-bold text-white mb-2">'+esc(s.value)+'</div>'+
+        '<div class="text-sm text-slate-400">'+esc(s.label)+'</div>'+
+      '</div>').join('');
+  }
+
+  function renderSectors(){
+    $('#sectors-list').innerHTML = sectors.map((sector, index) => {
+      const isEven = index % 2 === 0;
+      const features = sector.features.map(f =>
+        '<div class="glass-effect rounded-xl p-6 hover:border-cyan-500/30 transition-all duration-300 hover:scale-105">'+
+          '<div class="flex items-start space-x-4"><div class="flex-shrink-0"><div class="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center">'+iconSpan(f.icon,'text-cyan-400',24)+'</div></div>'+
+          '<div><h4 class="text-lg font-semibold text-white mb-2">'+esc(f.title)+'</h4><p class="text-sm text-slate-400">'+esc(f.description)+'</p></div></div>'+
+        '</div>').join('');
+      const specs = sector.specifications.map(s =>
+        '<div class="border-l-2 border-cyan-500 pl-4"><div class="text-sm text-slate-400 mb-1">'+esc(s.label)+'</div><div class="text-2xl font-bold text-white">'+esc(s.value)+'</div></div>').join('');
+      return '<div class="py-24 '+(isEven?'bg-[#0f172a]':'bg-[#1e293b]')+'"><div class="container mx-auto px-4 sm:px-6 lg:px-8">'+
+        '<div class="text-center mb-16"><div class="flex justify-center mb-6"><div class="w-20 h-20 bg-gradient-to-br from-cyan-500/20 to-teal-600/20 rounded-2xl flex items-center justify-center">'+iconSpan(sector.icon,'text-cyan-400',40)+'</div></div>'+
+        '<h2 class="text-4xl sm:text-5xl font-bold text-white mb-4">'+esc(sector.title)+'</h2>'+
+        '<p class="text-xl text-cyan-400 mb-6">'+esc(sector.subtitle)+'</p>'+
+        '<p class="text-lg text-slate-300 max-w-4xl mx-auto leading-relaxed">'+esc(sector.description)+'</p></div>'+
+        '<div class="mb-16"><h3 class="text-2xl font-bold text-white mb-8 text-center">Key Features</h3><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">'+features+'</div></div>'+
+        '<div><h3 class="text-2xl font-bold text-white mb-8 text-center">Technical Specifications</h3><div class="glass-effect rounded-2xl p-8 max-w-4xl mx-auto"><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">'+specs+'</div></div></div>'+
+        '<div class="text-center mt-12"><button onclick="openSector(\''+sector.id+'\')" class="inline-flex items-center px-8 py-4 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-cyan-600/50 hover:shadow-cyan-600/70 group border-none cursor-pointer">Explore More Details '+iconSpan('arrow-right','ml-2 group-hover:translate-x-1 transition-transform',20)+'</button></div>'+
+      '</div></div>';
+    }).join('');
+  }
+
+  function renderBrochures(){
+    $('#brochures-grid').innerHTML = brochures.map(b =>
+      '<div class="glass-effect rounded-xl p-6 hover:border-cyan-500/30 transition-all duration-300 hover:scale-105">'+
+        '<div class="flex items-start space-x-4 mb-4"><div class="flex-shrink-0"><div class="w-14 h-14 bg-cyan-600/20 rounded-lg flex items-center justify-center">'+iconSpan('file-text','text-cyan-400',28)+'</div></div>'+
+        '<div class="flex-1 min-w-0"><h3 class="text-lg font-semibold text-white mb-2 line-clamp-2">'+esc(b.title)+'</h3>'+
+        '<span class="inline-block px-3 py-1 text-xs font-medium bg-cyan-600/20 text-cyan-400 rounded-full">'+esc(b.category)+'</span></div></div>'+
+        '<p class="text-sm text-slate-400 mb-4 line-clamp-2">'+esc(b.description)+'</p>'+
+        '<div class="flex items-center justify-between text-xs text-slate-500 mb-4"><span>'+b.pages+' pages</span><span>'+esc(b.fileSize)+'</span></div>'+
+        '<button onclick="downloadBrochure('+b.id+')" class="w-full inline-flex items-center justify-center bg-cyan-600 hover:bg-cyan-700 text-white py-2 rounded-md transition-all duration-300 group border-none cursor-pointer">'+
+          iconSpan('download','mr-2',16)+'<span>Download PDF</span>'+iconSpan('chevron-right','ml-2 group-hover:translate-x-1 transition-transform',16)+'</button>'+
+      '</div>').join('');
+  }
+
+  function renderContactAndFooter(){
+    $('#ci-email').textContent = contactInfo.email;   $('#ci-email').href = 'mailto:'+contactInfo.email;
+    $('#ci-address').textContent = contactInfo.address;
+    $('#ci-linkedin').href = contactInfo.linkedin;    $('#ci-twitter').href = contactInfo.twitter;
+    $('#footer-email').textContent = contactInfo.email; $('#footer-email').href = 'mailto:'+contactInfo.email;
+    $('#footer-address').textContent = contactInfo.address;
+    $('#footer-linkedin').href = contactInfo.linkedin; $('#footer-twitter').href = contactInfo.twitter;
+    $('#year').textContent = new Date().getFullYear();
+  }
+
+  /* ---------------- ACTIONS (form/brochure stubs) ---------------- */
+  function submitContact(e){
+    e.preventDefault();
+    const btn = $('#contact-submit'), txt = $('#contact-submit-text');
+    btn.disabled = true; txt.textContent = 'Sending...';
+    setTimeout(() => {
+      showToast('Message Sent Successfully!', 'We will get back to you within 24 hours.');
+      e.target.reset();
+      btn.disabled = false; txt.textContent = 'Send Message';
+    }, 800);
+  }
+  function downloadBrochure(id){
+    const b = brochures.find(x => x.id === id);
+    if (!b) return;
+    if (b.file){
+      const a = document.createElement('a');
+      a.href = encodeURI(b.file);
+      a.download = b.file;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('Download Started', 'Downloading ' + b.title + '...');
+    } else {
+      showToast('Coming Soon', b.title + ' brochure will be available shortly.');
+    }
+  }
+
+  /* ---------------- SECTOR DETAIL PAGE ---------------- */
+  function openSector(id){
+    const sector = sectors.find(s => s.id === id);
+    const d = sectorDetails[id];
+    if (!sector || !d){ return; }
+    currentView = id;
+    closeMobileMenu();
+
+    const highlights = d.overview.highlights.map(h =>
+      '<div class="glass-effect rounded-lg p-4 flex items-start space-x-3">'+iconSpan('check-circle','text-cyan-400 flex-shrink-0 mt-1',20)+'<span class="text-slate-100 text-sm">'+esc(h)+'</span></div>').join('');
+
+    const caps = d.keyCapabilities.map(c =>
+      '<div class="glass-effect rounded-xl p-6 hover:border-cyan-500/30 transition-all duration-300 hover:scale-105"><div class="flex items-start space-x-4"><div class="flex-shrink-0"><div class="w-14 h-14 bg-cyan-600/20 rounded-lg flex items-center justify-center">'+iconSpan(c.icon,'text-cyan-400',28)+'</div></div><div><h3 class="text-lg font-semibold text-white mb-2">'+esc(c.title)+'</h3><p class="text-sm text-slate-400">'+esc(c.description)+'</p></div></div></div>').join('');
+
+    const specCols = Object.entries(d.technicalSpecs).map(([cat, list]) =>
+      '<div class="glass-effect rounded-2xl p-8"><h3 class="text-2xl font-bold text-cyan-400 mb-6 capitalize">'+esc(cat)+'</h3><div class="space-y-4">'+
+      list.map(s => '<div class="border-l-2 border-cyan-500 pl-4"><div class="text-sm text-slate-400 mb-1">'+esc(s.label)+'</div><div class="text-lg font-bold text-white">'+esc(s.value)+'</div></div>').join('')+
+      '</div></div>').join('');
+
+    const useCases = d.useCases.map(u =>
+      '<div class="glass-effect rounded-xl p-6 hover:border-cyan-500/30 transition-all duration-300"><div class="flex items-center mb-4"><div class="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center mr-4">'+iconSpan(u.icon,'text-cyan-400',24)+'</div><h3 class="text-xl font-semibold text-white">'+esc(u.title)+'</h3></div><p class="text-slate-400 text-sm">'+esc(u.description)+'</p></div>').join('');
+
+    let consortium = '';
+    if (id === 'ai-datacenter' && d.consortium){
+      consortium = '<section class="py-20 bg-gradient-to-b from-[#1e293b] to-[#0f172a]"><div class="container mx-auto px-4 sm:px-6 lg:px-8"><h2 class="text-4xl font-bold text-white text-center mb-12">Our Consortium Partners</h2><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">'+
+        d.consortium.map(p => '<div class="glass-effect rounded-xl p-6"><h3 class="text-xl font-bold text-cyan-400 mb-2">'+esc(p.name)+'</h3><p class="text-sm font-semibold text-slate-300 mb-3">'+esc(p.role)+'</p><p class="text-sm text-slate-400">'+esc(p.description)+'</p></div>').join('')+
+        '</div></div></section>';
+    }
+
+    const bgImg = SECTOR_HERO_IMAGES[id] || '';
+
+    $('#detail-view').innerHTML =
+      '<main>'+
+        '<section class="relative pt-32 pb-20 overflow-hidden">'+
+          '<div class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat" style="background-image:url(\''+bgImg+'\')"></div>'+
+          '<div class="absolute inset-0 bg-gradient-to-b from-[#0a1628]/85 via-[#0a1628]/65 to-[#0a1628]/95"></div>'+
+          '<div class="absolute inset-0 bg-gradient-to-r from-[#0a1628]/60 via-transparent to-[#0a1628]/60"></div>'+
+          '<div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">'+
+            '<div class="text-center mb-12"><div class="flex justify-center mb-6"><div class="w-24 h-24 bg-cyan-500/20 backdrop-blur-md border border-cyan-400/30 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/20">'+iconSpan(sector.icon,'text-cyan-300',48)+'</div></div>'+
+            '<h1 class="text-5xl sm:text-6xl font-bold text-white mb-4" style="text-shadow:0 4px 24px rgba(0,0,0,0.85),0 2px 8px rgba(0,0,0,0.95)">'+esc(sector.title)+'</h1>'+
+            '<p class="text-2xl text-amber-300 mb-6 font-semibold" style="text-shadow:0 0 24px rgba(252,211,77,0.5),0 2px 8px rgba(0,0,0,0.9)">'+esc(sector.subtitle)+'</p>'+
+            '<p class="text-xl text-slate-100 max-w-4xl mx-auto leading-relaxed" style="text-shadow:0 2px 8px rgba(0,0,0,0.9)">'+esc(d.overview.description)+'</p></div>'+
+            '<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">'+highlights+'</div>'+
+          '</div>'+
+        '</section>'+
+        '<section class="py-20 bg-[#0f172a]"><div class="container mx-auto px-4 sm:px-6 lg:px-8"><h2 class="text-4xl font-bold text-white text-center mb-12">Key Capabilities</h2><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">'+caps+'</div></div></section>'+
+        '<section class="py-20 bg-gradient-to-b from-[#1e293b] to-[#0f172a]"><div class="container mx-auto px-4 sm:px-6 lg:px-8"><h2 class="text-4xl font-bold text-white text-center mb-12">Technical Specifications</h2><div class="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">'+specCols+'</div></div></section>'+
+        '<section class="py-20 bg-[#0f172a]"><div class="container mx-auto px-4 sm:px-6 lg:px-8"><h2 class="text-4xl font-bold text-white text-center mb-12">Applications & Use Cases</h2><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">'+useCases+'</div></div></section>'+
+        consortium +
+        '<section class="py-20 bg-[#0f172a]"><div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center"><h2 class="text-4xl font-bold text-white mb-6">Ready to Transform Your Infrastructure?</h2>'+
+          '<p class="text-xl text-slate-300 mb-8 max-w-3xl mx-auto">Get in touch with our team to learn more about '+esc(sector.title)+' and how it can benefit your organization.</p>'+
+          '<div class="flex flex-col sm:flex-row gap-4 justify-center">'+
+            '<button onclick="goToSection(\'contact\')" class="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-4 text-lg rounded-md transition-all duration-300 shadow-lg shadow-cyan-600/50 border-none cursor-pointer">Contact Our Team</button>'+
+            '<button onclick="goToSection(\'brochures\')" class="border border-cyan-600 text-cyan-400 hover:bg-cyan-600/10 px-8 py-4 text-lg rounded-md cursor-pointer bg-transparent">Download Brochure</button>'+
+          '</div></div></section>'+
+      '</main>';
+
+    $('#home-view').style.display = 'none';
+    $('#detail-view').style.display = 'block';
+    window.scrollTo(0, 0);
+    refreshIcons();
+  }
+
+  /* ---------------- INTERSECTION OBSERVER ---------------- */
+  function setupObserver(){
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.section-fade-in').forEach(el => obs.observe(el));
+  }
+
+  /* ---------------- INIT ---------------- */
+  document.addEventListener('DOMContentLoaded', () => {
+    renderAbout();
+    renderSectors();
+    renderBrochures();
+    renderContactAndFooter();
+    buildHero();
+    refreshIcons();
+    startTyping(0);
+    startRotation();
+    setupObserver();
+  });
+  </script>
+</body>
+</html>
